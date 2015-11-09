@@ -7,9 +7,11 @@ def scan(text):
     words_list = text.lower().split()
     direction_list = ['north', 'south', 'east', 'west', 'down', 'up', 'left',
                       'right', 'back']
-    verb_list = ['go', 'kill', 'eat', 'stop']
+    verb_list = ['go', 'kill', 'eat', 'stop', 'shoot', 'attack', 'hide',
+                 'fire', 'hit', 'duck', 'sit', 'stand', 'kick', 'punch', 'fight']
     stop_list = ['the', 'in', 'of', 'from', 'at', 'it']
-    nouns_list = ['bear', 'princess', 'door', 'cabinet']
+    nouns_list = ['door', 'cabinet', 'gothon', 'doorway',
+                  'gun', 'him']
     
     scan = []
     

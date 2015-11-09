@@ -1,0 +1,41 @@
+The ex43_45 game must use 'lexicon' en 'parser'.
+
+The input needs to change from multiple choice to text input.
+
+Steps
+    Determine which answers are correct per room.
+        Include alternative wording
+        Use the multiple choice answers as a starting point
+    Determine which words need to be added to 'lexicon'
+    Handle wrong input
+        Display a message how to enter the correct input and give the player
+        another chance to enter the input corectly
+        
+Flow
+    'game' displays the description text of the current room than gives the 
+    palyer a choice. The player can type in the answer. Using 'lexicon' and 
+    'parser' the player's answer is then converted into a 'Sentence' object.
+    This object contains the subject, verb and object of the answer. 
+    The subject, verb and object are than compared to the expected combination
+    of subjects, verbs and objects
+    If the answer the player gave does not match. The player is asked to try
+    to give another answer.
+    
+Combat
+    The player has three basic choices. Shoot, melee attack and hide.
+    
+    Shoot
+        subject: player
+        verbs: shoot, fire
+        object: gothon, gun
+        
+    Melee attack
+        subject: player
+        verbs: hit, kick, punch, fight, attack
+        object: gothon, 
+        
+    Hide
+        subject: player
+        verbs: hide, duck, sit, stand
+        object: assortment of furniture, doorway, door
+        

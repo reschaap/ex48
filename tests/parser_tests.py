@@ -52,6 +52,10 @@ def test_parse_sentence():
     word_list = [('noun', 'princess'), ('verb', 'eat'), ('stop', 'the'), 
                 ('noun', 'pea')]
     word_list2 = [('verb', 'go'), ('direction', 'south')]
+    word_list3 = [('error', 'see'), ('stop', 'the'), ('noun', 'gun')]
+    word_list4 = [('noun', 'princess'), ('error', 'eee'), ('stop', 'the'),
+                  ('noun', 'pea')]
+    word_list5 = [('verb', 'go'), ('error', 'bye')]
     
     sentence = parser.parse_sentence(word_list)
     assert_equal(sentence.subject, 'princess')
@@ -62,3 +66,12 @@ def test_parse_sentence():
     assert_equal(sentence.subject, 'player')
     assert_equal(sentence.verb, 'go')
     assert_equal(sentence.object, 'south')
+    
+    sentence = parser.parse_sentence(word_list3)
+    assert_equal(sentence, None)
+    
+    sentence = parser.parse_sentence(word_list4)
+    assert_equal(sentence, None)
+    
+    sentence = parser.parse_sentence(word_list5)
+    assert_equal(sentence, None)

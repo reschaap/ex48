@@ -42,7 +42,7 @@ def parse_verb(word_list):
     if peek(word_list) == 'verb':
         return match(word_list, 'verb')
     else:
-        raise ParserError("Expected a verb next.", peek(word_list))
+        raise ParserError("Expected a verb next.", word_list)
     
     
 def parse_object(word_list):
@@ -56,7 +56,8 @@ def parse_object(word_list):
     elif next_word == 'number':
         return match(word_list, 'number')
     else:
-        raise ParserError("Expected a noun, direction or number next.")
+        raise ParserError("Expected a noun, direction or number next. ", 
+                          word_list)
     
     
 def parse_subject(word_list):
@@ -68,12 +69,26 @@ def parse_subject(word_list):
     elif next_word == 'verb':
         return ('noun', 'player')
     else:
-        raise ParserError("Expected a verb next.")
+        raise ParserError("Expected a verb next.", word_list)
     
     
 def parse_sentence(word_list):
-    subj = parse_subject(word_list)
-    verb = parse_verb(word_list)
-    obj = parse_object(word_list)
+    try:
+        subj = parse_subject(word_list)
+    except ParserError:
+        return None
+        
+    try:
+        verb = parse_verb(word_list)
+    except ParserError:
+        return None
+    
+    try:
+        obj = parse_object(word_list)
+    except ParserError:
+        return None
     
     return Sentencte(subj, verb, obj)
+
+def display_help(text):
+    pass
