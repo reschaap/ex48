@@ -58,11 +58,11 @@ class Death(Scene):
     ]
     
     def enter(self):
-        text = Death.quips[randint(0, len(self.quips)-1)]
-        display_text(text)
+        text_quip = Death.quips[randint(0, len(self.quips)-1)]
+        display_text(text_quip)
         
-        print "\n"
-        print "Do you still want to go on?"
+        text =  "Do you still want to go on?"
+        display_text
         
         answer = raw_input("y/n? >..")
         if answer == 'y':
@@ -90,27 +90,24 @@ class LaserWeaponArmory(Scene):
     
     def enter(self):
         text = game_text.laser_weapon_armory_enter
-        display_text(text)
-        code = "%d%d%d" % (randint(1,9), randint(1,9), randint(1,9))
+        code = "{0}{1}{2}".format(randint(1,9), randint(1,9), randint(1,9))
         
-        guess = raw_input("Enter a code> ")
+        guess = get_input(text)
         guesses = 1
-        while guess != code and guesses < 15:
+        while str(guess.object) != code and guesses < 15:
             guesses += 1
             correct = 0
         
             for i in range(0, len(code)):
-                if guess[i] == code[i]:
+                if str(guess.object)[i] == code[i]:
                     correct += 1
                 else:
                     continue
                 
-            right = "You got {0} right.".format(correct)
-            text = "BZZZZEDDD! \\n {0}".format(right)
-            display_text(text)
-            guess  = raw_input("Enter a code> ")
- 
-        if guess == code:
+            text = "BZZZZEDDD! \\n You have got {0} right".format(correct)
+            guess = get_input(text)
+            
+        if str(guess.object) == code:
             text = game_text.laser_weapon_armory_right_code
             display_text(text)
             return 'the_bridge'
@@ -124,14 +121,12 @@ class TheBridge(Scene):
     
     def enter(self):
         text = game_text.the_bridge_enter
-        text_output = textoutput.TextOutput(text, 60, 40)
-        text_output.display_text()
+        display_text(text)
         
         combat = CombatRound('the_bridge')
         if combat.play() == 'player':
             text = game_text.the_bridge_win
-            text_output = textoutput.TextOutput(text , 60, 40)
-            text_output.display_text()
+            display_text(text)
             return 'escape_pod'
         else:
             return 'death'
@@ -141,61 +136,42 @@ class EscapePod(Scene):
 
     def enter(self):
         text = game_text.escape_pod_enter
-        text_output = textoutput.TextOutput(text, 60, 40) 
-        text_output.display_text()
- 
         good_pod = randint(1,5)
         
-        guess = raw_input("[pod #]> ")
-        if int(guess) != good_pod:
-            bad_escape_pods = [1, 2, 3, 4, 5]
+        guess = get_input(text)
+        if guess.object == good_pod:
+            text =  game_text.escape_pod_right_choice.format(guess)
+            display_text(text)
+            exit(1)
+        elif guess.object != good_pod:
+            bad_escape_pods = range(1, 6)
             bad_escape_pods.remove(good_pod)
-            bad_escape_pods.remove(int(guess))
+            bad_escape_pods.remove(guess.object)
             second_choice = []
             second_choice.append(good_pod)
-            second_choice.append(int(guess))
+            second_choice.append(guess.object)
             second_choice.append(bad_escape_pods.pop(randint(0,2)))
             second_choice.sort()
             
-            text = """
-            When you move to pod {0} the warning lights of pods {1} and {2} 
-            start flashing. Seeing the pods fail right before your eyes makes 
-            you doubt whether you have chosen the right pod. Pods {3}, {4} and 
-            {5} are left.
-            """.format(guess, bad_escape_pods[0], bad_escape_pods[1], 
-                       second_choice[0], second_choice[1], second_choice[2])
+            text = game_text.escape_pod_choice.format(
+                guess.object, bad_escape_pods[0], bad_escape_pods[1], 
+                second_choice[0], second_choice[1], second_choice[2]
+                )
             
-            text_output = textoutput.TextOutput(text, 60, 40)
-            text_output.display_text()
-            
-            guess = raw_input("[pod #]> ")
-            if int(guess) != good_pod:
-                text = """
-                You jump into pod {0} and hit the eject button. The 
-                pod escapes into the void of space, then implodes as the hull 
-                ruptures, crushing your body into jam jelly.
-                """.format(guess)
-                text_output = textoutput.TextOutput(text, 60, 40)
-                text_output.display_text()
+            guess = get_input(text)
+            if guess.object == good_pod:
+                text =  game_text.escape_pod_right_choice.format(guess)
+                display_text(text)
+                exit(1)
+            elif guess.object != good_pod:
+                text = game_text.escape_pod_wrong_choice.format(guess.object)
+                display_text(text)
                 return 'death'
             else:
-                pass
+                raise ValueError("Guess is: {0}".format(guess.object))
         else:
-            pass
+            raise ValueError("Guess is: {0}".format(guess.object))
         
-        text =  """
-        You jump into pod {0} and hit the eject button. The pod 
-        easily slides out into space heading to the planet below. As it flies 
-        to the planet, you look back and see your ship implode then explode 
-        like a bright star, taking out the Gothon ship at the same time.  \\n
-        You won!
-        """.format(guess)
-        
-        text_output = textoutput.TextOutput(text, 60, 40)
-        text_output.display_text()
-        
-        exit(1)
-
 
 class Map(object):
     
@@ -230,45 +206,6 @@ class Player(object):
         self.hits = hits
 
 
-class PlayerInput(object):
-    """
-    This class deals with the player input. It will display the 
-    description before the input is needed. It will collect the input
-    and will deal with incorrect input if needed. Finally the input 
-    will be returned in the format that is required.
-    """
-    
-    def get_input(self, text):
-        text_output = textoutput.TextOutput(text, 60, 40)
-        text_output.display_text()
-        
-        choice = raw_input(">.. ")
-        if choice == "end":
-            exit(0)
-        else:
-            scan = lexicon.scan(choice)
-            sentence = parser.parse_sentence(scan)  
-        
-        while not sentence:
-            text = """
-            You make no sense. \\n
-            You can enter a sentence like 'Shoot the Gothon' or 
-            'Hide in the doorway' \\n
-            Try again
-            """
-            text_output = textoutput.TextOutput(text, 60, 40)
-            text_output.display_text()
-            
-            choice = raw_input(">..")
-            if choice == "end":
-                exit(0)
-            else:
-                scan = lexicon.scan(choice)
-                sentence = parser.parse_sentence(scan)  
-        
-        return sentence
-
-
 class CombatRound(object):
     """
     Plays out combat between the player and a Gothon. It is a rock, 
@@ -295,11 +232,11 @@ class CombatRound(object):
         result = self.get_result.get_result(choices)
         show_result = self.get_result.show_result(choices, result)
         end_result = self.check_hits(result)
-        player_hits = str(3 - self.player.hits)
-        gothon_hits = str(3 - self.gothon.hits)
+        player_health = str(self.player.hits)
+        gothon_health = str(self.gothon.hits)
         
-        score = "\\n Player hits: {0} Gothon hits: {1}".format(player_hits, 
-                                                               gothon_hits)
+        score = "\\n Player health: {0} Gothon health: {1}".format(player_health, 
+                                                               gothon_health)
         display_text(show_result + score)
         
         while end_result == None:
@@ -326,6 +263,8 @@ class CombatRound(object):
     def choose(self):
         if self.current_scene == "central_corridor":
             text = game_text.centralcorridor_combat
+        elif self.current_scene == "the_bridge":
+            text = game_text.the_bridge_combat
         else:
             text = "no text"
         
@@ -335,8 +274,9 @@ class CombatRound(object):
         player_choice = None
         
         while not player_choice:
-            player_input = PlayerInput()
-            sentence = player_input.get_input(text)
+#            player_input = PlayerInput()
+#            sentence = player_input.get_input(text)
+            sentence = get_input(text)
                         
             if self.match(sentence.verb, shoot_list):
                 player_choice = 'shoot'
@@ -466,3 +406,32 @@ class Result(object):
 def display_text(text):
     text_output = textoutput.TextOutput(text, 60, 40)
     text_output.display_text()
+    
+
+def get_input(text):
+    display_text(text)
+    
+    choice = raw_input(">.. ")
+    if choice == "end":
+        exit(0)
+    else:
+       scan = lexicon.scan(choice)
+       sentence = parser.parse_sentence(scan)  
+    
+    while not sentence:
+        text = """
+        You make no sense. \\n
+        You can enter a sentence like 'Shoot the Gothon' or 
+        'Hide in the doorway' \\n
+        Try again
+        """
+        display_text(text)
+        
+        choice = raw_input(">..")
+        if choice == "end":
+            exit(0)
+        else:
+            scan = lexicon.scan(choice)
+            sentence = parser.parse_sentence(scan)  
+        
+    return sentence

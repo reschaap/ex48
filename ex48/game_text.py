@@ -112,7 +112,16 @@ the_bridge_enter = """
     \\n Unfortunatly the last one seems to call your bluff and is reaching for
     his weapon.
     """
-    
+ 
+ 
+the_bridge_combat = """
+    You only have a short time to choose what to do before the 
+    Gothon makes his move.
+    You can see some places where you can hide, you can take a 
+    shot at the Gothon or you can take the fight to him and take 
+    him on with your fists. \\n
+    What do you do?
+    """
 the_bridge_win = """
     This time the Gothon is just laying there. You think you finally got him. 
     You set the bomb to go off in a couple of minutes. Then you run to the 
@@ -126,4 +135,25 @@ escape_pod_enter = """
     the escape pods, and now need to pick one to take. \\n Some of them could 
     be damaged but you don't have time to look. There's 5 pods, which one do 
     you take?
+    """
+
+escape_pod_choice = """
+    When you move to pod {0}, the warning lights of pods {1} and {2} 
+    start flashing. Seeing the pods fail right before your eyes makes 
+    you doubt whether you have chosen the right pod. Pods {3}, {4} and 
+    {5} are left.
+    """
+
+escape_pod_wrong_choice = """
+    You jump into pod {0} and hit the eject button. The 
+    pod escapes into the void of space, then implodes as the hull 
+    ruptures, crushing your body into jam jelly.
+    """
+
+escape_pod_right_choice = """
+    You jump into pod {0} and hit the eject button. The pod 
+    easily slides out into space heading to the planet below. As it flies 
+    to the planet, you look back and see your ship implode then explode 
+    like a bright star, taking out the Gothon ship at the same time.  \\n
+    You won!
     """

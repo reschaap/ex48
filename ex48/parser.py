@@ -2,7 +2,7 @@ class ParserError(Exception):
     pass
 
 
-class Sentencte(object):
+class Sentence(object):
     
     def __init__(self, subject, verb, obj):
         # remember we take ('noun', 'princess') tuples and convert them
@@ -38,9 +38,12 @@ def skip(word_list, word_type):
         
 def parse_verb(word_list):
     skip(word_list, 'stop')
+    next_word = peek(word_list)
     
-    if peek(word_list) == 'verb':
+    if next_word == 'verb':
         return match(word_list, 'verb')
+    elif next_word == 'number':
+        return ('verb', 'enter')
     else:
         raise ParserError("Expected a verb next.", word_list)
     
@@ -66,7 +69,7 @@ def parse_subject(word_list):
     
     if next_word == 'noun':
         return match(word_list, 'noun')
-    elif next_word == 'verb':
+    elif next_word == 'verb' or next_word == 'number':
         return ('noun', 'player')
     else:
         raise ParserError("Expected a verb next.", word_list)
@@ -88,7 +91,7 @@ def parse_sentence(word_list):
     except ParserError:
         return None
     
-    return Sentencte(subj, verb, obj)
+    return Sentence(subj, verb, obj)
 
 def display_help(text):
     pass

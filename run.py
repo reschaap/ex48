@@ -2,6 +2,6 @@
 
 from ex48.game import *
 
-a_map = Map('laser_weapon_armory')
+a_map = Map('escape_pod')
 a_game = Engine(a_map)
 a_game.play()
